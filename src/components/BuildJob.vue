@@ -1,13 +1,13 @@
 <template>
   <div class="hello">
    
-<router-link to="/HelloWorld">back</router-link>
+<router-link to="/helloWorld">back</router-link>
 
         <div class="container-block">
             <div class="list-container">
                 <div class="list-content">
-                    <div v-for="(post,index) of posts"  v-on:click="onliClick(post.url)" class="item-content" >
-{{index}}
+                    <div v-for="post of posts"  v-on:click="onliClick(post.url)" class="item-content" >
+
          <p>{{post.Kind}}</p>
 <p>{{post.Title}}</p>
 <p>{{post.Area}}</p>
@@ -70,11 +70,6 @@ export default {
       .then(response => {
         // JSON responses are automatically parsed.
         this.posts = response.data;
-        // for(let i =0;this.posts.length;i++){
-        //           for(let j =;this.posts.length;i++){
-          
-        // }
-        // }
 
         console.log("this.posts", this.posts);
       })
