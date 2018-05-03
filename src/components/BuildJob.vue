@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
    
-<router-link to="/HelloWorld">back</router-link>
+<router-link to="/">back</router-link>
 
         <div class="container-block">
             <div class="list-container">
@@ -15,7 +15,7 @@
 <p>{{post.Bidbase_Pcent}}</p>
                     </div>
                 </div>
-                <div class="container-loading" v-if="show_loading">
+
                 </div>
             </div>
         </div>
@@ -70,11 +70,7 @@ export default {
       .then(response => {
         // JSON responses are automatically parsed.
         this.posts = response.data;
-        // for(let i =0;this.posts.length;i++){
-        //           for(let j =;this.posts.length;i++){
-          
-        // }
-        // }
+
 
         console.log("this.posts", this.posts);
       })

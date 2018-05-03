@@ -4,8 +4,8 @@
     <h2>Essential Links</h2>
         <h2 style="color: red;">count: {{ count }}</h2>
 <router-link to="/count">Go to count</router-link>
-<router-link to="/buildJob">buildJob</router-link>
-
+<router-link to="/buildJob">Go to  buildJob</router-link>
+<router-link to="/twtraffic">Go to  twtraffic</router-link>
 <ul v-if="posts && posts.length" class="border">
   <div v-for="post of posts">
 

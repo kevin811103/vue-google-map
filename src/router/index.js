@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Count from '@/components/Count'
 import BuildJob from '@/components/BuildJob'
+import Twtraffic from '@/components/Twtraffic'
 Vue.use(Router)
 
 export default new Router({
@@ -21,6 +22,11 @@ export default new Router({
       path: '/buildJob',
       name: 'BuildJob',
       component: BuildJob
+    },
+    {
+      path: '/twtraffic',
+      name: 'Twtraffic',
+      component: Twtraffic
     },
   ]
 })

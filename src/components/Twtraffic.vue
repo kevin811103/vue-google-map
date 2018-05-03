@@ -1,21 +1,45 @@
 <template>
   <div class="hello">
-   
+   <GmapMap
+  :center="{lat:   loclat, lng:  loclng}"
+  :zoom="15"
+  map-type-id="terrain"
+  style="width: 500px; height: 300px"
+>
+    
+  <GmapMarker
+    :key="index"
+    
+    v-for="(m, index) in markers"
+    :position="m.position"
+    :clickable="true"
+    :draggable="true"
+    @click="center=m.position"
+  />
+</GmapMap>
 <router-link to="/helloWorld">back</router-link>
 
         <div class="container-block">
             <div class="list-container">
                 <div class="list-content">
-                    <div v-for="post of posts"  v-on:click="onliClick(post.url)" class="item-content" >
-
-         <p>{{post.Kind}}</p>
-<p>{{post.Title}}</p>
-<p>{{post.Area}}</p>
-<p>{{post.Bidbond}}</p>
-<p>{{post.Bidbase_Pcent}}</p>
+                    <div v-for="post of posts"  v-on:click="addressClick(post.房屋座落)" class="item-content" >
+<p>土地使用分區:{{post.土地使用分區}}</p>
+<p>實際用途:{{post.實際用途}}</p>
+<p>建物現況:{{post.建物現況}}</p>
+<p>建物面積:{{post.建物面積}}坪</p>
+<p>房屋座落:{{post.房屋座落}}</p>
+<p>構造:{{post.構造}}</p>
+<p>price:{{post.price}}</p>
+<p>每月租金:{{post.每月租金}}</p>
+<p>每坪租金:{{post.每坪租金}}</p>
+<p>用途限制:{{post.用途限制}}</p>
+<p>租期屆滿:{{post.租期屆滿}}</p>
+<!-- <p>經管單位:{{post.經管單位}}</p>
+<p>縣市:{{post.縣市}}</p>
+<p>總樓層數:{{post.總樓層數}}</p> -->
                     </div>
                 </div>
-                <div class="container-loading" v-if="show_loading">
+
                 </div>
             </div>
         </div>
@@ -31,13 +55,17 @@ import axios from "axios";
 import jsonp from "jsonp";
 
 export default {
-  name: "HelloWorld",
+  name: "Twtraffic",
+
   data() {
     return {
       msg: "Welcome to Your Vue.js App",
       posts: [],
       newPosts: [],
-      errors: []
+      errors: [],
+      markers: [],
+      loclat:25.049437,
+      loclng:121.534849,
     };
   },
   computed: mapGetters({
@@ -61,6 +89,7 @@ export default {
     //   }
     // );
 
+
     axios
       .get(`https://www.railway.gov.tw/Upload/UserFiles/%E8%87%BA%E9%90%B5%E5%B1%80%E6%88%BF%E5%9C%B0%E7%94%A2%E5%87%BA%E7%A7%9F%E6%83%85%E5%BD%A2.json`, {
         // axios.get(`http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json`,{
@@ -70,11 +99,10 @@ export default {
       .then(response => {
         // JSON responses are automatically parsed.
         this.posts = response.data;
-        for(let i =0;this.posts.length;i++){
-                  for(let j =;this.posts.length;i++){
-          
-        }
-        }
+        this.posts.forEach((data)=>{
+          data.price=Math.floor(data.每月租金/1000).toString()+",000"
+          data.每坪租金= Math.floor(data.每月租金/parseInt(data.建物面積));
+        })
 
         console.log("this.posts", this.posts);
       })
@@ -85,6 +113,47 @@ export default {
   methods: {
     onliClick: function(url) {
       window.open(url, "_blank");
+    },
+    addressClick: function(address){
+console.log("轉換前地址",address)
+    let res = encodeURI(address);
+    console.log("轉換後地址", res)
+ axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=` +res +`&sensor=false`, {
+        // axios.get(`http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json`,{
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      })
+      .then(response => {
+        // JSON responses are automatically parsed.
+        // this.posts = response.data;
+        // this.posts.forEach((data)=>{
+        //   data.price=Math.floor(data.每月租金/1000).toString()+",000"
+        //   data.每坪租金= Math.floor(data.每月租金/parseInt(data.建物面積));
+        // })
+        let respAddress= response.request.responseText
+  
+
+        console.log("this.response",response );
+         console.log("this.respAddress", respAddress);
+               let final =JSON.parse(respAddress);
+        console.log("final",final);
+        console.log("lat",final.results[0].geometry.location.lat)
+      
+        console.log("lng",final.results[0].geometry.location.lng)
+        this.loclat=final.results[0].geometry.location.lat
+         this.loclng=final.results[0].geometry.location.lng
+        this.markers.push({
+          title:"111",
+           position: new google.maps.LatLng(final.results[0].geometry.location.lat,final.results[0].geometry.location.lng)
+         
+        })
+      })
+      .catch(e => {
+        this.errors.push(e);
+      });
+
+
+    
     }
   }
 };
@@ -99,15 +168,16 @@ export default {
   top: 0px;
 }
 .item-content {
+  border-style: outset;
   display: inline-block;
-  width: 250px;
-  height: 280px;
-  max-height: 280px;
+  width: 500px;
+  height: 500px;
+  max-height: 500px;
   margin-left: 15px;
   margin-top: 15px;
   background-color: white;
   list-style: none;
-  word-wrap: break-word;
+  /* word-wrap: break-word; */
   cursor: pointer;
 }
 
@@ -150,6 +220,7 @@ export default {
 }
 
 .list-container {
+  border-style: groove;
   display: block;
   height: 100%;
   width: 1075px;
@@ -159,6 +230,7 @@ export default {
 }
 
 .list-content {
+  
   display: block;
   min-height: 100vh;
   width: 100%;
