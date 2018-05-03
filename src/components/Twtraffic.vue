@@ -62,7 +62,7 @@ export default {
     // );
 
     axios
-      .get(`http://www.taisugar.com.tw/chinese/PropertyOpenData.ashx?pid=4`, {
+      .get(`https://www.railway.gov.tw/Upload/UserFiles/%E8%87%BA%E9%90%B5%E5%B1%80%E6%88%BF%E5%9C%B0%E7%94%A2%E5%87%BA%E7%A7%9F%E6%83%85%E5%BD%A2.json`, {
         // axios.get(`http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json`,{
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -70,6 +70,11 @@ export default {
       .then(response => {
         // JSON responses are automatically parsed.
         this.posts = response.data;
+        for(let i =0;this.posts.length;i++){
+                  for(let j =;this.posts.length;i++){
+          
+        }
+        }
 
         console.log("this.posts", this.posts);
       })
